@@ -10,6 +10,7 @@ flask = "*"
 pygresql = "*"
 psycopg2-binary = "*"
 pandas = "*"
+pymongo = "*"
 
 [requires]
 python_version = "3.8"
