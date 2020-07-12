@@ -11,6 +11,9 @@ pygresql = "*"
 psycopg2-binary = "*"
 pandas = "*"
 pymongo = "*"
+flask-cors = "*"
+requests = "*"
+pylint = "*"
 
 [requires]
 python_version = "3.8"
