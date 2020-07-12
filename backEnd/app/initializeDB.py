@@ -10,7 +10,7 @@ def main(conn, colMongo):
         # calling mongo insert functionality
         mongoInsert(colMongo)
 
-        qry = """select exists(select * from information_schema.tables where table_name=%s);"""
+        qry = """select exists(select * from information_schema.tables where table_name=%s;"""
         cur = conn.cursor()
 
         cur.execute(qry, ("orders",))
@@ -66,7 +66,7 @@ def insertdata(conn):
     cur = conn.cursor()
     try:
 
-        with open("./csv/Test task-Postgres-orders.csv", "r") as f:
+        with open("../csv/Test task-Postgres-orders.csv", "r") as f:
             # lastIndex = int((list(f)[-1]).split(',')[0])
             # if orderID > lastIndex:
             # next(f)
@@ -85,7 +85,7 @@ def insertdata(conn):
 
         conn.commit()
 
-        with open("./csv/Test task - Postgres - order_items.csv", "r") as f:
+        with open("../csv/Test task - Postgres - order_items.csv", "r") as f:
 
             reader = csv.reader(f)
             next(reader)
@@ -100,7 +100,7 @@ def insertdata(conn):
                 print(e)
         conn.commit()
 
-        with open("./csv/Test task - Postgres - deliveries.csv", "r") as f:
+        with open("../csv/Test task - Postgres - deliveries.csv", "r") as f:
             reader = csv.reader(f)
             next(reader)
             print("ignoring duplicate deliveries IDs")
@@ -123,12 +123,14 @@ def insertdata(conn):
 def mongoInsert(conn):
     try:
 
-        dataCustmr = pd.read_csv("./csv/Test task - Mongo - customers.csv")
-        dataCustmrComp = pd.read_csv("./csv/Test task - Mongo - customer_companies.csv")
+        dataCustmr = pd.read_csv("../csv/Test task - Mongo - customers.csv")
+        dataCustmrComp = pd.read_csv(
+            "../csv/Test task - Mongo - customer_companies.csv"
+        )
         # merge df
         data = pd.merge(dataCustmr, dataCustmrComp, on="company_id")
         records = json.loads(data.T.to_json()).values()
-        conn.create_index([("company_id", pymongo.ASCENDING)], unique=True)
+        conn.create_index([("user_id", pymongo.ASCENDING)], unique=True)
         for row in records:
             try:
                 conn.insert_one(row)
