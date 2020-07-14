@@ -3,11 +3,13 @@ from bson import json_util
 import json
 from flask import Flask
 from flask import request
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+cors = CORS(app, support_credentials=True)
 
 
-@app.route("/")
+@app.route("/get_order")
 # @app.route("/order")
 def index():
     data = db.view()

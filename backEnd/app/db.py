@@ -39,8 +39,8 @@ def view():
             "customer_company": companyName,
             "customer": customer,
             "created": row[1],
-            "deliveredAmount": deliveredAmount,
-            "total": totalAmount,
+            "deliveredAmount": "${}".format(deliveredAmount),
+            "total": "${}".format(totalAmount),
         }
         myRawList.append(tempDict)
     cur.close()

@@ -12,7 +12,7 @@ class FlaskTest(unittest.TestCase):
     # Check for response 200
     def test_index(self):
         client = app.test_client(self)
-        resp = client.get("/")
+        resp = client.get("/get_order")
         statuscode = resp.status_code
 
         self.assertEqual(statuscode, 200)
@@ -20,7 +20,7 @@ class FlaskTest(unittest.TestCase):
     # testing content from resp(all orders)
     def test_index_content(self):
         client = app.test_client(self)
-        resp = client.get("/")
+        resp = client.get("/get_order")
 
         self.assertEqual(resp.content_type, "application/json")
 
