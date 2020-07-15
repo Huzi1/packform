@@ -28,5 +28,11 @@ code {
     monospace;
 }
 .clear {
-border: 1px solid skyblue !important;
+border: 3px solid gray !important;
+
+
+}
+
+.clear:hover{
+
 }

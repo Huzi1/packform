@@ -1,14 +1,16 @@
 import React from "react";
-import Form from 'react-bootstrap/Form'
-import { Row, Col, Container, Button } from 'react-bootstrap'
 
-const Search = () => {
+import { Row, Container, Button } from 'react-bootstrap'
+
+const Landing = () => {
 
     return (
         <>
             <Container>
+                <Row style={{ "padding": "20%" }} className="justify-content-md-center">
+                    <Button id="landingbtn" variant="primary" size="lg" href="/Orders">Go To Orders</Button>
+                </Row>
 
-                <Button variant="primary" size="lg" href="/Orders">Go TO Orders</Button>
             </Container>
 
 
@@ -16,4 +18,4 @@ const Search = () => {
     );
 
 }
-export default Search;
+export default Landing;

@@ -4,15 +4,33 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory, { PaginationProvider, PaginationListStandalone } from 'react-bootstrap-table2-paginator';
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
-import filterFactory, { dateFilter } from 'react-bootstrap-table2-filter';
-import { Row, Col, Container } from 'react-bootstrap'
+import filterFactory from 'react-bootstrap-table2-filter';
+import { Row, Col, Button } from 'react-bootstrap';
+import moment from 'moment';
+import 'react-dates/initialize';
+import "react-dates/lib/css/_datepicker.css";
+import { DateRangePicker } from 'react-dates';
 
 const TableView = () => {
     const { SearchBar, ClearSearchButton } = Search;
+   
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+
+   
+
+
+    const [focusedInput, setFocusedInput] = useState(null);
     const [userData, setUserData] = useState([]);
     const [rowTotal, setRowTotal] = useState(0);
     const [rowSum, setRowSum] = useState(0);
+    const [permData, setPermData] = useState([]);
     const tableRef = useRef();
+
+    const dateFormatter = (cell) => {
+        return (<span>{moment(cell).format('MMM Do, h:mm a')}</span>)
+    }
+
     const columns = [{
         text: 'Order Name',
         dataField: 'order_name',
@@ -35,22 +53,18 @@ const TableView = () => {
         text: 'Created',
         dataField: 'created',
         searchable: false,
-        filter: dateFilter(),
-        headerStyle: (colum, colIndex) => {
-            return { width: '30%', textAlign: 'justify' };
+        formatter: dateFormatter,
+        sort: true,
+        sortCaret: (order, column) => {
+            if (!order) return (<span>&nbsp;&nbsp;Desc/Asc</span>);
+            else if (order === 'asc') return (<span>&nbsp;&nbsp;Desc/<font color="red">Asc</font></span>);
+            else if (order === 'desc') return (<span>&nbsp;&nbsp;<font color="red">Desc</font>/Asc</span>);
+            return null;
         }
-        // sort: true,
-        // sortCaret: (order, column) => {
-        //     if (!order) return (<span>&nbsp;&nbsp;Desc/Asc</span>);
-        //     else if (order === 'asc') return (<span>&nbsp;&nbsp;Desc/<font color="red">Asc</font></span>);
-        //     else if (order === 'desc') return (<span>&nbsp;&nbsp;<font color="red">Desc</font>/Asc</span>);
-        //     return null;
-        // }
     },
     {
         text: 'Delivered Amount',
         dataField: 'deliveredAmount',
-        // formatter: priceFormatter,
         searchable: false
     },
     {
@@ -58,10 +72,79 @@ const TableView = () => {
         dataField: 'total',
         searchable: false
     }]
-    // const afterFilter = (newResult, newFilters) => {
-    //     console.log(newResult)
-    //     console.log(newFilters)
+
+
+
+    // const onDateCLose = () => {
+    //     //console.log(dateRange)
+
+    //     var tempArr = []
+    //     let tempData = permData
+
+    //     tempData.forEach(function (obj) {
+
+    //         let tempDate = moment(obj.created).format('YYYY MM DD')
+    //         // console.log(typeof (tempDate), tempDate)
+    //         let start = moment(startDate).format('YYYY MM DD')
+    //         //let start = moment(dateRange.startDate).format('YYYY MM DD')
+    //         // console.log(typeof (start), start)
+    //         let end = moment(endDate).format('YYYY MM DD')
+    //         //let end = moment(dateRange.endDate).format('YYYY MM DD')
+    //         // console.log(typeof (end), end)
+
+    //         if (moment(tempDate).isAfter(start) && moment(tempDate).isBefore(end)) {
+    //             // console.log("rowObj", obj)
+    //             tempArr.push(obj)
+    //         }
+
+    //     })
+
+    //     setUserData(tempArr)
+    //     // console.log(userData.length)
+    //     setRowTotal(tempArr.length);
     // }
+
+    useEffect(() => {
+        //console.log(dateRange)
+        if (startDate != null && endDate != null) {
+            var tempArr = []
+            let tempData = permData
+
+            tempData.forEach(function (obj) {
+                // console.log(moment(obj.created).isAfter(startDate))
+                let tempDate = moment(obj.created).format('YYYY MM DD')
+                // console.log(typeof (tempDate), tempDate)
+                let start = moment(startDate).format('YYYY MM DD')
+                //let start = moment(dateRange.startDate).format('YYYY MM DD')
+                // console.log(typeof (start), start)
+                let end = moment(endDate).format('YYYY MM DD')
+                //let end = moment(dateRange.endDate).format('YYYY MM DD')
+                // console.log(typeof (end), end)
+                // console.log("tempDate", tempDate, "start", start, "end", end)
+                // console.log(moment(tempDate).isAfter(start))
+                if (moment(tempDate).isAfter(start) && moment(tempDate).isBefore(end)) {
+                    console.log("rowObj", obj)
+                    tempArr.push(obj)
+                }
+
+            })
+
+            if (tempArr.length > 0) {
+                setUserData(tempArr)
+                // console.log(userData.length)
+                setRowTotal(tempArr.length);
+            } else {
+                alert("No Data in the given date range!")
+                setEndDate(null);
+                setStartDate(null);
+            }
+
+
+        }
+    }, [startDate, endDate]);
+
+
+
     const url = "http://localhost:5000"
     useEffect(() => {
         console.log("calling /get_order")
@@ -76,6 +159,14 @@ const TableView = () => {
                     tempUserData.push(item);
                     rowSumTemp = parseFloat(rowSumTemp) + parseFloat(item.total.replace("$", ""));
                 });
+                tempUserData.sort(function (a, b) {
+                    var c = new Date(a.created);
+                    var d = new Date(b.created);
+                    return c - d;
+                });
+                setMinDate(moment(tempUserData[0].created))
+                setMaxDate(moment(tempUserData[tempUserData.length - 1].created))
+                setPermData(tempUserData);
                 setUserData(tempUserData);
                 setRowTotal(tempUserData.length);
                 setRowSum(rowSumTemp);
@@ -84,17 +175,7 @@ const TableView = () => {
 
             });
     }, []);
-    // const setTotalAMount = (data) => {
-    //     var sum = 0
-    //     data.forEach(function (item) {
-    //         // console.log(parseFloat(item.total.split('$')[1]))
-    //         sum += parseFloat(item.total.split('$')[1])
-    //     })
-    //     sum = Math.round((sum + Number.EPSILON) * 100) / 100
-    //     console.log("calling in useEffect")
-    //     setTotal(sum)
-    // }
-    // document.getElementsByClassName("table")[0] && handleGetCurrentData()
+
 
 
     const options = {
@@ -103,9 +184,6 @@ const TableView = () => {
         sizePerPage: 5,
     };
 
-    // const handleGetCurrentData = () => {
-    //     console.log(tableRef.handleGetCurrentData());
-    // }
 
     const afterSearch = (searchData) => {
         setRowTotal(searchData.length);
@@ -115,40 +193,17 @@ const TableView = () => {
         })
         setRowSum(rowSumTemp);
     };
-    // const clearAmount = (props) => {
+    const refreshTable = () => {
 
-    //     setTotal(0)
-    // };
-    // const handleGetCurrentData = () => {
-    //     let total = 0
-    //     if (document.getElementsByClassName("table")[0]) {
-    //         const tble = document.getElementsByClassName("table")[0]
-    //         const tBody = tble.getElementsByTagName('tbody')[0]
-    //         console.log(tBody)
-    //         if (tBody && tBody.getElementsByTagName('tr')) {
-    //             let trows = tBody.getElementsByTagName('tr')
-    //             if (trows[0].getElementsByTagName('td')[6]) {
-    //                 for (var i = 0; i < trows.length; i++) {
-    //                     // var trs = trows.getElementsByTagName("tr")[i];
-    //                     // var cellVal = trs.cells[0]
-    //                     console.log(parseFloat(trows[i].getElementsByTagName('td')[6].innerText.split("$")[1]))
-    //                     total += parseFloat(trows[i].getElementsByTagName('td')[6].innerText.split("$")[1])
-    //                 }
-    //                 total = Math.round((total + Number.EPSILON) * 100) / 100
-    //                 setTotal(total)
-    //             }
+        setUserData(permData)
 
-    //         }
-    //         else {
-    //             setTotal(0)
-    //         }
+        setRowTotal(permData.length);
+    }
 
-
-    //     }
-    //     console.log(total)
-    // }
-
-
+    const handleDatesChange = ({ startDate, endDate }) => {
+        setStartDate(startDate);
+        setEndDate(endDate);
+    };
     return (
         <>
             <div>
@@ -178,15 +233,44 @@ const TableView = () => {
                                             {
                                                 props => (
                                                     <div>
-                                                        <Row style={{ "padding": "30px", "justifyContent": "space-around" }}>
 
-                                                            <SearchBar style={{ "width": "300%" }} {...props.searchProps} />
-                                                            <ClearSearchButton {...props.searchProps} className={"clear"}/>
+
+                                                        <Row style={{ "padding": "30px", "justifyContent": "space-around" }}>
+                                                            <Col md={{ span: -1, offset: 0 }}>
+                                                                <SearchBar style={{ "width": "250%", "float": "left" }} {...props.searchProps} />
+                                                            </Col>
+                                                            <Col md={{ span: 1, offset: 0 }}>
+                                                                <ClearSearchButton {...props.searchProps} className={"clear"} />
+                                                            </Col>
+
+                                                        </Row>
+                                                        <Row>
+                                                            <Col md={{ span: -1, offset: 0 }}>
+                                                                <DateRangePicker
+
+                                                                    endDate={endDate} // momentPropTypes.momentObj or null,
+                                                                    startDate={startDate} // momentPropTypes.momentObj or null,
+                                                                    startDateId="startDate" // PropTypes.string.isRequired,
+                                                                    endDateId="endDate" // PropTypes.string.isRequired,
+                                                                    onDatesChange={handleDatesChange}// PropTypes.func.isRequired,
+                                                                    focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                                                                    onFocusChange={focusedInput => setFocusedInput(focusedInput)} // PropTypes.func.isRequired,
+                                                                    displayFormat={'DD/MM/YYYY'}
+                                                                    isOutsideRange={() => false}
+                                                                />
+                                                            </Col>
+                                                            <Col md={{ span: 1, offset: 0 }}>
+                                                                <Button onClick={refreshTable} variant="secondary" size="lg" active>
+                                                                    <i class="fa fa-refresh" aria-hidden="true"></i>
+                                                                </Button>
+                                                            </Col>
                                                         </Row>
 
-                                                        {/* <button onClick={(e) => { props.searchProps.onClear(e); setTotal(0) }}  >clear me</button> */}
+                                                        <br />
+
                                                         <Row>
-                                                            <h3> Total:$ {rowSum}</h3>
+                                                            <h3 data-testid="rowCount"> Total:${rowSum}
+                                                            </h3>
                                                         </Row>
 
                                                         <BootstrapTable
@@ -195,6 +279,10 @@ const TableView = () => {
                                                             filter={filterFactory()}
                                                             noDataIndication="No data"
                                                             ref={tableRef}
+                                                            striped
+                                                            hover
+                                                            condensed
+                                                            defaultSorted
 
 
                                                         />
