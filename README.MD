@@ -32,14 +32,14 @@ Note:
 
 
 3. Setting up application stack 
-backend: 
+## backend: 
 - 3.1  navigate to packform/backEnd 
 - 3.2  install pipenv shell with requirements (run from backend dir)
     ```
     pipenv install -r app/requirements.txt
     ```
 - 3.3  activate shell by 
-```shell
+```
 pipenv shell 
 ```
 - 3.4   run flask from packfrom/backEnd/app 
@@ -47,25 +47,40 @@ pipenv shell
 python app.py
 ```
 
-## Your Flask App is now up and running. All flask api's are now exposed!
+#### Your Flask App is now up and running. All flask api's are now exposed!
 
 - Note: check terminal outputs for comments. Python script will execute sql script for schema building and populate the databases.
        
-##frontEnd:
-        3.1 - navigate to packform/front_end
-        3.2 - Install node modules  ```npm install```
-        3.3 - Build project ```npm run-script build```
-        3.4 - After build, serve with port ```serve -s build -p 3000```
+## frontEnd:
+- 3.5 - navigate to packform/front_end
+- 3.6 - Install node modules  
+```
+npm install
+```
+- 3.7 - Build project 
+```
+npm run-script build
+```
+- 3.8 - After build, serve with port 
+```
+serve -s build -p 3000
+```
 
-        Note* make sure port is 3000
+Note: make sure port is 3000
 
 
-#####Testing######
+### Testing
 
-    backEnd: 
-        - from packform/backEnd/app run ```python testApp.py```
+## backEnd: 
+- from packform/backEnd/app run 
+```
+python testApp.py
+```
         
-    frontEnd:
-        - from packform/front_end run ``` npm test```
-        (if promted with no new change, enter to test all again )
+## frontEnd:
+- from packform/front_end run 
+``` 
+npm test
+```
+check terminal for test results(enter `a` to repeat all tests)
         
