@@ -16,12 +16,14 @@ prerequiste
 ## Steps to follow:
 1. Clone git repo locally 
 
-### `git clone https://github.com/Huzi1/packform`
+ `git clone https://github.com/Huzi1/packform`
 
-2. setting up database stack
+2. setting up **database stack**
 - 2.1 go to dir `packform`
 - 2.2 run the below cmd to start postgresql and mongoDB containers
-    ###`docker-compose up -d `
+```
+docker-compose up -d 
+```
     
 Note:
 - postgresql should listen at 0.0.0.0:5432 with default username=postgres and password=admin
@@ -29,18 +31,27 @@ Note:
 - mongodb can be accessed through browser at http://0.0.0.0:8081/ 
 
 
-3. setting up application stack 
-    backend: 
-        3.1 - navigate to packform/backEnd 
-        3.2 - install pipenv shell with requirements (run from backend dir)
-            ```pipenv install -r app/requirements.txt```
-        3.3 - activate shell by ``` pipenv shell ```
-        3.4 - run flask from packfrom/backEnd/app ```python app.py```
+3. Setting up application stack 
+backend: 
+- 3.1  navigate to packform/backEnd 
+- 3.2  install pipenv shell with requirements (run from backend dir)
+    ```
+    pipenv install -r app/requirements.txt
+    ```
+- 3.3  activate shell by 
+```shell
+pipenv shell 
+```
+- 3.4   run flask from packfrom/backEnd/app 
+```
+python app.py
+```
 
-        Your Flask App is now up and running. All flask api's are now exposed!
-        Note* check terminal outputs for comments. Python script will execute sql script for schema building and populate the databases.
+## Your Flask App is now up and running. All flask api's are now exposed!
+
+- Note: check terminal outputs for comments. Python script will execute sql script for schema building and populate the databases.
        
-    frontEnd:
+##frontEnd:
         3.1 - navigate to packform/front_end
         3.2 - Install node modules  ```npm install```
         3.3 - Build project ```npm run-script build```
