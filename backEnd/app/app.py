@@ -46,21 +46,3 @@ if __name__ == "__main__":
 # import pytest
 # import requests
 
-# url = "http://127.0.0.1:5000"  # The root url of the flask app
-
-
-# def test_main():
-#     r = requests.get(url + "/")  #  path  "/"
-#     assert r.status_code == 200  # status code ok 200
-
-
-# def test_main_search(client):
-
-#     mimetype = "application/json"
-#     headers = {"Content-Type": mimetype, "Accept": mimetype}
-#     data = {"keyword": "hand"}
-
-#     response = c.post(url + "/search", data=json.dumps(data), headers=headers)
-#     assert response.content_type == mimetype
-#     assert response.json["code"] == 200
-

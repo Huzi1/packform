@@ -1,50 +1,54 @@
 import psycopg2
-import initializeDB as insertCsv
 from pymongo import MongoClient
 import initializeDB as insertCsv
 
 
 mongoClient = MongoClient("mongodb://root:admin@localhost:27017")
-mongoDB = mongoClient["clientDB"]
-mongoCol = mongoDB["customer"]
+mongoDB = mongoClient["clientDB"]  # Mongo init DB
+mongoCol = mongoDB["customer"]  # mongo init collection
 
 connPgsql = psycopg2.connect(
     host="localhost", database="test", user="postgres", password="admin"
 )
-
-# Initialize and populate data in postgresql, uncomment line 8 & 9 for DB init
-# insertCsv.main(connPgsql, mongoCol)
+connPgsql.autocommit = True
+# Initialize and populate data in postgresql
+insertCsv.main(connPgsql, mongoCol, True)
 
 
 def view():
+    conn = connPgsql.cursor()
     cur = connPgsql.cursor()
+    try:
 
-    qry = """select * from orders t1 inner join order_items t2 on t1.order_id = t2.order_id inner join deliveries t3 on t2.order_items_id = t3.order_items_id;"""
-    myRawList = []
-    cur.execute(qry)
-    rawData = cur.fetchall()
-    for row in rawData:
-        pricePrUnt = row[6]
-        if pricePrUnt == None:
-            pricePrUnt = 0
-        customer = row[3]
-        mongoDoc = mongoCol.find_one({"user_id": "{}".format(customer)})
-        companyName = mongoDoc["company_name"]
-        # print(mongoDoc["company_name"])
-        totalAmount = round((row[7] * pricePrUnt), 2)
-        deliveredAmount = round((row[11] * pricePrUnt), 2)
-        tempDict = {
-            "order_name": row[2],
-            "product": row[8],
-            "customer_company": companyName,
-            "customer": customer,
-            "created": row[1],
-            "deliveredAmount": "${}".format(deliveredAmount),
-            "total": "${}".format(totalAmount),
-        }
-        myRawList.append(tempDict)
-    cur.close()
-    return myRawList
+        qry = """select * from orders t1 inner join order_items t2 on t1.order_id = t2.order_id inner join deliveries t3 on t2.order_items_id = t3.order_items_id;"""
+        myRawList = []
+        cur.execute(qry)
+        rawData = cur.fetchall()
+        for row in rawData:
+            pricePrUnt = row[6]
+            if pricePrUnt == None:
+                pricePrUnt = 0
+            customer = row[3]
+            mongoDoc = mongoCol.find_one({"user_id": "{}".format(customer)})
+            companyName = mongoDoc["company_name"]
+            # print(mongoDoc["company_name"])
+            totalAmount = round((row[7] * pricePrUnt), 2)
+            deliveredAmount = round((row[11] * pricePrUnt), 2)
+            tempDict = {
+                "order_name": row[2],
+                "product": row[8],
+                "customer_company": companyName,
+                "customer": customer,
+                "created": row[1],
+                "deliveredAmount": "${}".format(deliveredAmount),
+                "total": "${}".format(totalAmount),
+            }
+            myRawList.append(tempDict)
+        cur.close()
+        return myRawList
+
+    except Exception as e:
+        print(e)
 
 
 def search(keyword):
@@ -83,5 +87,3 @@ def search(keyword):
         cur.close()
         return {"code": 202}
 
-
-# print(myRawList)

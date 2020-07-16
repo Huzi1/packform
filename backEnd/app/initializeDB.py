@@ -4,54 +4,49 @@ import pymongo
 import json
 import csv
 
+# flag = True
 
-def main(conn, colMongo):
-    try:
-        # calling mongo insert functionality
-        mongoInsert(colMongo)
 
-        qry = """select exists(select * from information_schema.tables where table_name=%s;"""
-        cur = conn.cursor()
+def main(conn, colMongo, flag):
+    if flag:
 
-        cur.execute(qry, ("orders",))
-        check = cur.fetchone()[0]
-        # print(check)
-        if check is True:
-            print("#####table exists...skipping table creation#####")
-            print("###########checking data####")
-            # qryOrders = (
-            #     """select order_id from orders order by order_id desc limit 1 ;"""
-            # )
-            # qryDelievers = """select deliveries_id from deliveries order by deliveries_id desc limit 1;"""
-            # qryOrderItem = """select order_items_id from order_items order by order_items_id desc limit 1;"""
+        try:
+            flag = False
+            # calling mongo insert functionality
+            mongoInsert(colMongo)
 
-            # cur.execute(qryDelievers)
-            # deliverLastID = cur.rowcount
+            qry = """select exists(select * from information_schema.tables where table_name=%s);"""
+            cur = conn.cursor()
 
-            # cur.execute(qryOrderItem)
-            # orderItmLastID = cur.rowcount
+            cur.execute(qry, ("orders",))
+            check = cur.fetchone()[0]
 
-            # cur.execute(qryOrders)
-            # orderID = cur.rowcount
+            # print(check)
+            if check is True:
+                print("#####table exists...skipping table creation#####")
+                print("###########checking data####")
 
-            # # calling insert function
+                cur.close()
+                insertdata(conn)
 
-            # insertdata(conn, deliverLastID, orderItmLastID, orderID)
-            # cur.close()
-        else:
-            print("creating tables in Postgresql")
-            initDB(conn)
-    except Exception as e:
-        print("table check failed")
-        print(e)
+            else:
+                print("Creating tables in Postgresql")
+                cur.close()
+                initDB(conn)
+        except Exception as e:
+            print("table check failed")
+            print(e)
 
 
 def initDB(conn):
     try:
 
         cur = conn.cursor()
-        sql_file = open("initDB.sql", "r")
+        sql_file = open("./initDB.sql", "r")
+        print("reading sql script")
         cur.execute(sql_file.read())
+        print("read done")
+        insertdata(conn)
         cur.close()
 
     except psycopg2.errors.DuplicateTable as e:
@@ -63,13 +58,12 @@ def initDB(conn):
 
 
 def insertdata(conn):
-    cur = conn.cursor()
+    con = conn
+    cur = con.cursor()
     try:
 
         with open("../csv/Test task-Postgres-orders.csv", "r") as f:
-            # lastIndex = int((list(f)[-1]).split(',')[0])
-            # if orderID > lastIndex:
-            # next(f)
+
             reader = csv.reader(f)
             next(reader)
             print("ignoring duplicate order IDs")
@@ -79,11 +73,9 @@ def insertdata(conn):
                         "INSERT INTO orders VALUES (%s, %s, %s, %s) ON CONFLICT DO NOTHING",
                         row,
                     )
-                # cur.copy_from(f, 'orders', null='', sep=',')
+
             except Exception as e:
                 print(e)
-
-        conn.commit()
 
         with open("../csv/Test task - Postgres - order_items.csv", "r") as f:
 
@@ -98,7 +90,6 @@ def insertdata(conn):
                     )
             except Exception as e:
                 print(e)
-        conn.commit()
 
         with open("../csv/Test task - Postgres - deliveries.csv", "r") as f:
             reader = csv.reader(f)
@@ -112,9 +103,15 @@ def insertdata(conn):
                     )
             except Exception as e:
                 print(e)
-        conn.commit()
+
+        print("####Tables populated with data")
+        print(
+            "############################\n### Databases Setup Done###\n###########################"
+        )
 
         cur.close()
+        return "ok"
+
     except Exception as e:
         print("Insert failed!")
         print(e)
@@ -142,10 +139,8 @@ def mongoInsert(conn):
                 )
             except Exception as e:
                 print(e)
-
+       
     except Exception as e:
         print("mongo insert fail")
         print(e)
 
-
-# def insertMongo(conn):
