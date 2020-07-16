@@ -41,7 +41,7 @@ Note:
     ```
     pipenv install -r app/requirements.txt
     ```
-    Please be patient
+    Please be patient pipLock build might take 5 mins
 - 3.3  activate shell by 
 ```
 pipenv shell 
