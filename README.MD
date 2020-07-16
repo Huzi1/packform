@@ -47,7 +47,7 @@ pipenv shell
 python app.py
 ```
 
-#### Your Flask App is now up and running. All flask api's are now exposed!
+## Your Flask App is now up and running. All flask api's are now exposed!
 
 - Note: check terminal outputs for comments. Python script will execute sql script for schema building and populate the databases.
        
@@ -69,15 +69,15 @@ serve -s build -p 3000
 Note: make sure port is 3000
 
 
-### Testing
+## Testing
 
-## backEnd: 
+### backEnd: 
 - from packform/backEnd/app run 
 ```
 python testApp.py
 ```
         
-## frontEnd:
+### frontEnd:
 - from packform/front_end run 
 ``` 
 npm test
