@@ -13,11 +13,12 @@ import { DateRangePicker } from 'react-dates';
 
 const TableView = () => {
     const { SearchBar, ClearSearchButton } = Search;
-   
+    const [minDate, setMinDate] = useState(null);
+    const [maxDate, setMaxDate] = useState(null);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
 
-   
+
 
 
     const [focusedInput, setFocusedInput] = useState(null);
@@ -75,34 +76,7 @@ const TableView = () => {
 
 
 
-    // const onDateCLose = () => {
-    //     //console.log(dateRange)
-
-    //     var tempArr = []
-    //     let tempData = permData
-
-    //     tempData.forEach(function (obj) {
-
-    //         let tempDate = moment(obj.created).format('YYYY MM DD')
-    //         // console.log(typeof (tempDate), tempDate)
-    //         let start = moment(startDate).format('YYYY MM DD')
-    //         //let start = moment(dateRange.startDate).format('YYYY MM DD')
-    //         // console.log(typeof (start), start)
-    //         let end = moment(endDate).format('YYYY MM DD')
-    //         //let end = moment(dateRange.endDate).format('YYYY MM DD')
-    //         // console.log(typeof (end), end)
-
-    //         if (moment(tempDate).isAfter(start) && moment(tempDate).isBefore(end)) {
-    //             // console.log("rowObj", obj)
-    //             tempArr.push(obj)
-    //         }
-
-    //     })
-
-    //     setUserData(tempArr)
-    //     // console.log(userData.length)
-    //     setRowTotal(tempArr.length);
-    // }
+    
 
     useEffect(() => {
         //console.log(dateRange)

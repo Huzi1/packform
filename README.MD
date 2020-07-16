@@ -41,6 +41,7 @@ Note:
     ```
     pipenv install -r app/requirements.txt
     ```
+    Please be patient
 - 3.3  activate shell by 
 ```
 pipenv shell 
