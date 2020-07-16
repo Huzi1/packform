@@ -8,7 +8,7 @@ mongoDB = mongoClient["clientDB"]  # Mongo init DB
 mongoCol = mongoDB["customer"]  # mongo init collection
 
 connPgsql = psycopg2.connect(
-    host="localhost", database="test", user="postgres", password="admin"
+    host="localhost", database="postgres", user="postgres", password="admin"
 )
 connPgsql.autocommit = True
 # Initialize and populate data in postgresql
