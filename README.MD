@@ -9,6 +9,7 @@ prerequiste
  - Install Docker & docker-compose
  - Install pipenv from terminal
  - Install node (I am using node -v v10.15.0)
+ - Install python 3.*
 
 
 
@@ -16,7 +17,9 @@ prerequiste
 ## Steps to follow:
 1. Clone git repo locally 
 
- `git clone https://github.com/Huzi1/packform`
+ ```
+ git clone https://github.com/Huzi1/packform
+ ```
 
 2. setting up **database stack**
 - 2.1 go to dir `packform`
