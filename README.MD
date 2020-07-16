@@ -1,4 +1,4 @@
-Full Stack Software Engineer Test
+# Full Stack Software Engineer Test
 
 Total components - 4
  - Backend=Flask server
@@ -11,25 +11,25 @@ prerequiste
  - Install node (I am using node -v v10.15.0)
 
 
-Steps to follow:
 
-###Section 1
-1 - Clone git repo locally 
-```
-```
 
-2- setting up database stack
-    2.1 go to dir `packform`
-    2.2 run the below cmd to start postgresql and mongoDB containers
-    ```docker-compose up -d ```
+## Steps to follow:
+1. Clone git repo locally 
+
+### `git clone https://github.com/Huzi1/packform`
+
+2. setting up database stack
+- 2.1 go to dir `packform`
+- 2.2 run the below cmd to start postgresql and mongoDB containers
+    ###`docker-compose up -d `
     
-    
-    note*   - postgresql should listen at 0.0.0.0:5432 with default username=postgres and password=admin
-            - mongoDB should listen at 0.0.0.0:27017 
-            - mongodb can be accessed through browser at http://0.0.0.0:8081/ 
+Note:
+- postgresql should listen at 0.0.0.0:5432 with default username=postgres and password=admin
+- mongoDB should listen at 0.0.0.0:27017 
+- mongodb can be accessed through browser at http://0.0.0.0:8081/ 
 
 
-3 setting up application stack 
+3. setting up application stack 
     backend: 
         3.1 - navigate to packform/backEnd 
         3.2 - install pipenv shell with requirements (run from backend dir)
@@ -57,5 +57,4 @@ Steps to follow:
     frontEnd:
         - from packform/front_end run ``` npm test```
         (if promted with no new change, enter to test all again )
-        
         
