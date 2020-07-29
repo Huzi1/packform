@@ -1,5 +1,10 @@
 # Full Stack Software Engineer Test
 
+![GitHub Logo](/logo.png)
+
+
+
+
 Total components - 4
  - Backend=Flask server
  - FrontEnd=React.js
