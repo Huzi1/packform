@@ -19,7 +19,7 @@ packaging==20.4
 pandas==1.0.5
 pluggy==0.13.1
 psycopg2-binary==2.8.5
-py==1.9.0
+py==1.10.0
 PyGreSQL==5.2
 pylint==2.5.3
 pymongo==3.10.1
